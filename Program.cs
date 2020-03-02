@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using static System.Console;
+using static System.Threading.Thread;
 
 namespace AsyncDelegate
 {
@@ -11,12 +8,12 @@ namespace AsyncDelegate
 
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("***** Async Delegate Invocation *****");
+            WriteLine("***** Async Delegate Invocation *****");
 
             // Print out the ID of the executing thread.
-            Console.WriteLine("Main() invoked on thread {0}.", Thread.CurrentThread.ManagedThreadId);
+            WriteLine($"Main() invoked on thread {CurrentThread.ManagedThreadId}.");
 
             // Invoke Add() on a secondary thread.
             BinaryOp b = new BinaryOp(Add);
@@ -25,22 +22,21 @@ namespace AsyncDelegate
             // This message will keep printing until the Add() method is finished.
             while (!ar.AsyncWaitHandle.WaitOne(1000, true))
             {
-                Console.WriteLine("Doing more work in Main()!");
+                WriteLine("Doing more work in Main()!");
             }
 
             // Obtain the result of the Add() method when ready.
             int answer = b.EndInvoke(ar);
-            Console.WriteLine("10 + 10 is {0}.", answer);
-            Console.ReadLine();
-
+            WriteLine($"10 + 10 is {answer}.");
+            ReadLine();
         }
         static int Add(int x, int y)
         {
             // Print out the ID of the executing thread.
-            Console.WriteLine("Add() invoked on thread {0}.", Thread.CurrentThread.ManagedThreadId);
+            WriteLine($"Add() invoked on thread {CurrentThread.ManagedThreadId}.");
 
             // Pause to simulate a lengthy operation.
-            Thread.Sleep(5000);
+            Sleep(5000);
             return x + y;
         }
     }
